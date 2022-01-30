@@ -7,14 +7,24 @@ let passwordRegEx=/((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{6,40})/;
 
 function setusername(){
     userName = $("#username").val();
+    $.ajax({
+        type: 'POST',
+        url: 'https://dev.stedi.me/twofactorlogin/' + userName,
+        data: JSON.stringify({userName, password}),
+        success: function(data) {
+            // window.location.href = "https://dev.stedi.me/timer.html#"+data;//add the token to the url
+        },
+        contentType: "application/text",
+        dataType: 'text'
+    });
 }
 
 function setuserpassword(){
     password = $("#password").val();
-    var valid=passwordRegEx.exec(password);
-    if (!valid){
-        alert('Must be 6 digits, upper, lower, number, and symbol');
-    }
+    // var valid=passwordRegEx.exec(password);
+    // if (!valid){
+    //     alert('Must be 6 digits, upper, lower, number, and symbol');
+    // }
 }
 
 function setverifypassword(){
@@ -46,19 +56,36 @@ function checkexpiredtoken(token){
     }
 }
 
+// function userlogin(){
+//     setuserpassword();
+//     setusername();
+//     $.ajax({
+//         type: 'POST',
+//         url: 'https://dev.stedi.me/twofactorlogin/' + userName,
+//         data: JSON.stringify({userName, password}),
+//         success: function(data) {
+//             window.location.href = "https://dev.stedi.me/timer.html#"+data;//add the token to the url
+//         },
+//         contentType: "application/text",
+//         dataType: 'text'
+//     });
+
+// }
+
 function userlogin(){
-    setuserpassword();
-    setusername();
+
     $.ajax({
-        type: 'POST',
-        url: 'https://dev.stedi.me/login',
-        data: JSON.stringify({userName, password}),
+ frontend
+        url: 'https://dev.stedi.me/twofactorlogin/',
+        data: {phoneNumber:userName, oneTimePassword:password},
+
         success: function(data) {
             window.location.href = "/timer.html#"+data;//add the token to the url
-        },
-        contentType: "application/text",
-        dataType: 'text'
-    });
+    },
+        error: function(data) {
+            console.log("this sucks")
+        }
+        });
 
 }
 
